@@ -121,16 +121,21 @@ void remove_lunch(char lunchmenu[][100], int choice){
         if(c >= 1 && c <= 9){
             printf("Enter the quantity to remove :: ");
             scanf("%d", &quantity);
-            purchased[c] -= quantity * lunch_rate[c][1];
+            int removed_cost = quantity * lunch_rate[c][1];
+            purchased[c] -= removed_cost;
             quantities[c] -= quantity;
             total_quant -= quantity;
-            total -= purchased[c];
-            gst = purchased[c] * 0.12;
+            total -= removed_cost;
+            gst = removed_cost * 0.12;
             _gst[c] -= gst;
             _cgst[c] -= gst / 2;
             _sgst[c] -= gst / 2;
         }else{
             printf("%s", "\n[Invalid] code entered, [Try again]\n\n");
+            printf("%s", "\n[1] Remove Items");
+            printf("%s", "\n[2] Print final bill");
+            printf("%s", "\nPress [1] or [2]: ");
+            scanf("%d", &choice); 
             remove_lunch(lunchmenu, choice);
         }
 
@@ -172,16 +177,21 @@ void remove_dinner(char dinnermenu[][100], int choice){
         if(c >= 1 && c <= 9){
             printf("Enter the quantity to remove :: ");
             scanf("%d", &quantity);
-            purchased[c] -= quantity * dinner_rate[c][1];
+            int removed_cost = quantity * dinner_rate[c][1];
+            purchased[c] -= removed_cost;
             quantities[c] -= quantity;
             total_quant -= quantity;
-            total -= purchased[c];
-            gst = purchased[c] * 0.12;
+            total -= removed_cost;
+            gst = removed_cost * 0.12;
             _gst[c] -= gst;
             _cgst[c] -= gst / 2;
             _sgst[c] -= gst / 2;
         }else{
             printf("%s", "\n[Invalid] code entered, [Try again]\n\n");
+            printf("%s", "\n[1] Remove Items");
+            printf("%s", "\n[2] Print final bill");
+            printf("%s", "\nPress [1] or [2]: ");
+            scanf("%d", &choice);            
             remove_dinner(dinnermenu, choice);
         }
 
@@ -223,16 +233,21 @@ void remove_bfast(char bfmenu[][100], int choice){
         if(c >= 1 && c <= 9){
             printf("Enter the quantity to remove :: ");
             scanf("%d", &quantity);
-            purchased[c] -= quantity * bf_rate[c][1];
+            int removed_cost = quantity * bf_rate[c][1];
+            total -= removed_cost;
+            purchased[c] -= removed_cost;
             quantities[c] -= quantity;
             total_quant -= quantity;
-            total -= purchased[c];
-            gst = purchased[c] * 0.12;
+            gst = removed_cost * 0.12;
             _gst[c] -= gst;
             _cgst[c] -= gst / 2;
             _sgst[c] -= gst / 2;
         }else{
             printf("%s", "\n[Invalid] code entered, [Try again]\n\n");
+            printf("%s", "\n[1] Remove Items");
+            printf("%s", "\n[2] Print final bill");
+            printf("%s", "\nPress [1] or [2]: ");
+            scanf("%d", &choice); 
             remove_bfast(bfmenu, choice);
         }
 
@@ -284,15 +299,15 @@ void bfast(char bfmenu[][100]){
     {
         printf("\nEnter the quantity::");
         scanf("%d",&quantity);
-        purchased[c]= quantity*bf_rate[c][1]; 
-        quantities[c]=quantity;
-        total_quant+=quantity;
-        total+=purchased[c];
-        gst=purchased[c]*0.12;
-        _gst[c]=gst;
-        total_gst+=gst;
-        _cgst[c]=gst/2;
-        _sgst[c]=gst/2;
+        purchased[c] += quantity*bf_rate[c][1]; 
+        quantities[c] += quantity;
+        total_quant += quantity;
+        total += purchased[c];
+        gst = purchased[c]*0.12;
+        _gst[c] += gst;
+        total_gst += gst;
+        _cgst[c] += gst/2;
+        _sgst[c] += gst/2;
     }
     else if (c==0)
     {   
@@ -350,7 +365,7 @@ void display_bf_bill(char bfmenu[][100]){
     printf("+###################################################################################################+\n\n");
     printf("                                  ## APNA RESTAURANT ##                  \n\n");
     printf("                                 --BILLING INFORMATION--                \n\n");
-    printf("  |ITEMS            |QUANTITY     |PRICE(Rs.)     |SGST            |CGST          |GST (CGST+SGST) |\n");
+    printf("  |ITEMS            |QUANTITY     |PRICE(Rs.)     |SGST            |CGST          |GST (CGST+SGST)  |\n");
     printf("  --------------------------------------------------------------------------------------------------\n");  
    
     for(i=1;i<=8;i++)
@@ -365,13 +380,12 @@ void display_bf_bill(char bfmenu[][100]){
             printf("|%-16.2f|\n", _gst[i]);
         }
 
-    }    
+    }   
 
-    printf("  --------------------------------------------------------------------------------------------------\n");
-    printf("  |TOTAL PRICE (Cost + GST) -> %.2f                                                              |\n",total+total_gst);
-    printf("  --------------------------------------------------------------------------------------------------\n");
-    printf("\n                          ## Thank You, Please visit again ! ##                           \n"); 
-    printf("\n\n+###################################################################################################+\n\n");
+    puts("  --------------------------------------------------------------------------------------------------\n");
+    printf("  |EXPECTED PRICE (Cost + GST) -> %.2f                                                               |\n",total+total_gst);
+    puts("  --------------------------------------------------------------------------------------------------\n"); 
+
 }
 
 
@@ -453,7 +467,7 @@ void display_lunch_bill(char lunchmenu[][100]){
     printf("+###################################################################################################+\n\n");
     printf("                                  ## APNA RESTAURANT ##                  \n\n");
     printf("                                 --BILLING INFORMATION--                \n\n");
-    printf("  |ITEMS            |QUANTITY     |PRICE(Rs.)     |SGST            |CGST          |GST (CGST+SGST) |\n");
+    printf("  |ITEMS            |QUANTITY     |PRICE(Rs.)     |SGST            |CGST          |GST (CGST+SGST)  |\n");
     printf("  --------------------------------------------------------------------------------------------------\n");  
     
     for(i=1;i<=9;i++)
@@ -462,18 +476,22 @@ void display_lunch_bill(char lunchmenu[][100]){
         {
             printf("  |%-15s  ",lunchmenu[i]);
             printf("|%-5d\t  ", quantities[i]);
-            printf("|%-5d\t  ",purchased[i]);
+            printf("|%-5d\t  ", purchased[i]);
             printf("|%-5.2f\t   ", _sgst[i]);
             printf("|%-5.2f\t   ", _cgst[i]);
-            printf("|%-16.2f|\n", _gst[i]);
+            printf("|%-16.2f  |\n", _gst[i]);
         }
 
     }
+
+    puts("  --------------------------------------------------------------------------------------------------\n");
+    printf("  |EXPECTED PRICE (Cost + GST) -> %.2f                                                               |\n",total+total_gst);
+    puts("  --------------------------------------------------------------------------------------------------\n");
 }
 
 void final_lunch_bill(){
     puts("  --------------------------------------------------------------------------------------------------\n");
-    printf("  |TOTAL PRICE (Cost + GST) -> %.2f                                                              |\n",total+total_gst);
+    printf("|TOTAL PRICE (Cost + GST) -> %.2f                                                                 |\n",total+total_gst);
     puts("  --------------------------------------------------------------------------------------------------\n");
     puts("\n                          ## Thank You, Please visit again ! ##                           \n"); 
     puts("\n\n+###################################################################################################+\n\n");
@@ -494,15 +512,15 @@ void dinner(char dinnermenu[][100]){
     {
         printf("\nEnter the quantity::");
         scanf("%d",&quantity);
-        purchased[c]= quantity*dinner_rate[c][1];
-        quantities[c]=quantity;
-        total_quant+=quantity;
-        total+=purchased[c];
-        gst=purchased[c]*0.12;
-        _gst[c]=gst;
-        total_gst+=gst;
-        _cgst[c]=gst/2;
-        _sgst[c]=gst/2;
+        purchased[c] += quantity*dinner_rate[c][1];
+        quantities[c] += quantity;
+        total_quant += quantity;
+        total += purchased[c];
+        gst = purchased[c]*0.12;
+        _gst[c] += gst;
+        total_gst += gst;
+        _cgst[c] += gst/2;
+        _sgst[c] += gst/2;
     }
     else if (c==0)
     {   
@@ -561,7 +579,7 @@ void display_dinner_bill(char dinnermenu[][100]){
     printf("+###################################################################################################+\n\n");
     printf("                                  ## APNA RESTAURANT ##                  \n\n");
     printf("                                 --BILLING INFORMATION--                \n\n");
-    printf("  |ITEMS            |QUANTITY     |PRICE(Rs.)     |SGST            |CGST          |GST (CGST+SGST) |\n");
+    printf("  |ITEMS            |QUANTITY     |PRICE(Rs.)     |SGST            |CGST          |GST (CGST+SGST)  |\n");
     printf("  --------------------------------------------------------------------------------------------------\n");  
     
     for(i=1;i<=9;i++)
@@ -577,11 +595,15 @@ void display_dinner_bill(char dinnermenu[][100]){
         }
     }
 
+    puts("  --------------------------------------------------------------------------------------------------\n");
+    printf("  |EXPECTED PRICE (Cost + GST) -> %.2f                                                               |\n",total+total_gst);
+    puts("  --------------------------------------------------------------------------------------------------\n");
+
 }
 
 void final_dinner_bill(){
     puts("  --------------------------------------------------------------------------------------------------\n");
-    printf("  |TOTAL PRICE (Cost + GST) -> %.2f                                                              |\n",total+total_gst);
+    printf("  |TOTAL PRICE (Cost + GST) -> %.2f                                                               |\n",total+total_gst);
     puts("  --------------------------------------------------------------------------------------------------\n");
     puts("\n                          ## Thank You, Please visit again ! ##                           \n"); 
     puts("\n\n+###################################################################################################+\n\n");
@@ -590,7 +612,7 @@ void final_dinner_bill(){
 
 void final_bfast_bill(){
     puts("  --------------------------------------------------------------------------------------------------\n");
-    printf("  |TOTAL PRICE (Cost + GST) -> %.2f                                                              |\n",total+total_gst);
+    printf("  |TOTAL PRICE (Cost + GST) -> %.2f                                                               |\n",total+total_gst);
     puts("  --------------------------------------------------------------------------------------------------\n");
     puts("\n                          ## Thank You, Please visit again ! ##                           \n"); 
     puts("\n\n+###################################################################################################+\n\n");
